@@ -7,24 +7,21 @@ export const POST_QUESTION = async (req, res) => {
     const { userId, title, questionText } = req.body;
 
     if (!userId || !title || !questionText) {
-      return res.status(400).json({ error: "Please fill required fields" });
+      return res.status(400).json({ error: "Please fill required inputs" });
     }
 
     const createdUser = await UserModel.findOne({ id: userId });
-    console.log("req.body", req.body);
 
     if (!createdUser) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    const date = new Date().toISOString();
 
     const question = new QuestionModel({
       id: uuidv4(),
       userId: userId,
       title: title,
       questionText: questionText,
-      date: date,
+      date: new Date().toISOString(),
     });
 
     const savedQuestion = await question.save();
@@ -55,7 +52,7 @@ export const DELETE_QUESTION = async (req, res) => {
     const question = await QuestionModel.findOne({ id: req.params.id });
 
     if (!question) {
-      return res.status(404).json({ message: "Question do not exists" });
+      return res.status(404).json({ message: "Question does not exists" });
     }
     if (question.userId !== req.body.userId) {
       return res
