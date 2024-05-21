@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from 'mongoose'
 import "dotenv/config";
 import userRoutes from "./src/routes/user.js"
+import questionRoutes from "./src/routes/question.js"
 const app = express();
 import cors from "cors"
 
@@ -16,6 +17,7 @@ mongoose
   });
 
   app.use(userRoutes)
+  app.use(questionRoutes)
 
   app.use((req, res) => {
     return res.status(404).json({ message: "There are no such endpoint" });
