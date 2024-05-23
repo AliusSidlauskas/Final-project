@@ -67,3 +67,13 @@ export const DELETE_QUESTION = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+export const GET_BY_ID = async (req, res) => {
+  try {
+    const question = await QuestionModel.findOne({ id: req.params.id });
+    return res.status(200).json({ question: question });
+  } catch (err) {
+    console.log(err);
+  }
+};

@@ -5,7 +5,7 @@ const answerSchema = mongoose.Schema({
     questionId:{type:String, required:true},
     userId:{type:String, required:true},
     answerText:{type: String, required:true},
-    gainedLikesNumber:{type: Number, required:true},
+    // gainedLikesNumber:{type: Number, required:true},
     date:{type: String, required: true}
 })
 

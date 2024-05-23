@@ -23,7 +23,11 @@ export const GET_ANSWER = async (req, res) => {
 export const POST_ANSWER = async (req, res) => {
   try {
     const questionId = req.params.id;
-    const { userId, answerText, gainedLikesNumber = 0 } = req.body;
+    const { 
+      userId, 
+      answerText, 
+      // gainedLikesNumber = 0
+     } = req.body;
 
     if (!userId || !answerText) {
       return res.status(400).json({ message: "Please fill required inputs" });
@@ -40,7 +44,7 @@ export const POST_ANSWER = async (req, res) => {
       questionId: questionId,
       userId: userId,
       answerText: answerText,
-      gainedLikesNumber: gainedLikesNumber,
+      // gainedLikesNumber: gainedLikesNumber,
       date: new Date().toISOString(),
     });
 
