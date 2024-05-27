@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import AnswerModel from "../models/answer.js";
 import QuestionModel from "../models/question.js";
+import AnswerLikeModel from "../models/likeDislike.js";
 
 
 export const GET_ANSWER = async (req, res) => {
@@ -26,7 +27,6 @@ export const POST_ANSWER = async (req, res) => {
     const { 
       userId, 
       answerText, 
-      // gainedLikesNumber = 0
      } = req.body;
 
     if (!userId || !answerText) {
@@ -44,7 +44,6 @@ export const POST_ANSWER = async (req, res) => {
       questionId: questionId,
       userId: userId,
       answerText: answerText,
-      // gainedLikesNumber: gainedLikesNumber,
       date: new Date().toISOString(),
     });
 
@@ -76,3 +75,49 @@ export const DELETE_ANSWER = async (req, res) => {
         console.log(err) 
     return res.status(500).json({message:"Internal Server Error"})}
 }
+
+export const LIKE_ANSWER = async (req, res) => {
+  const { userId, answerId } = req.body;
+  try {
+    const existingLike = await AnswerLikeModel.findOne({ userId, answerId });
+    if (existingLike) {
+      return res.status(400).json({ message: 'User has already liked/disliked this answer' });
+    }
+    const newLike = new AnswerLikeModel({ userId, answerId, action: 'like' });
+    await newLike.save();
+
+    const updatedAnswer = await AnswerModel.findOneAndUpdate(
+      { id: answerId },
+      { $inc: { likeCount: 1 } },
+      { new: true }
+    );
+
+    res.status(201).json({ message: 'Liked successfully', likeCount: updatedAnswer.likeCount });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error' });
+  }
+};
+
+export const DISLIKE_ANSWER = async (req, res) => {
+  const { userId, answerId } = req.body;
+  try {
+    const existingDislike = await AnswerLikeModel.findOne({ userId, answerId });
+    if (existingDislike) {
+      return res.status(400).json({ message: 'User has already liked/disliked this answer' });
+    }
+    const newDislike = new AnswerLikeModel({ userId, answerId, action: 'dislike' });
+    await newDislike.save();
+
+    const updatedAnswer = await AnswerModel.findOneAndUpdate(
+      { id: answerId },
+      { $inc: { dislikeCount: 1 } },
+      { new: true }
+    );
+
+    res.status(201).json({ message: 'Disliked successfully', dislikeCount: updatedAnswer.dislikeCount });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error' });
+  }
+};

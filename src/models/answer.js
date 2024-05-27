@@ -5,8 +5,10 @@ const answerSchema = mongoose.Schema({
     questionId:{type:String, required:true},
     userId:{type:String, required:true},
     answerText:{type: String, required:true},
-    // gainedLikesNumber:{type: Number, required:true},
-    date:{type: String, required: true}
+    date:{type: String, required: true},
+    likeCount: { type: Number, default: 0 },
+    dislikeCount: { type: Number, default: 0 }
+
 })
 
 export default mongoose.model("Answer", answerSchema)
